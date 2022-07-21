@@ -8,6 +8,13 @@ const loginUser = ( req, res = response ) => {
 
 }
 
+const loginWithFacebook = ( req, res = response ) => {
+
+    console.log(req)
+
+}
+
 module.exports = {
-    loginUser
+    loginUser,
+    loginWithFacebook
 }
