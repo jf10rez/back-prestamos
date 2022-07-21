@@ -16,6 +16,10 @@ const UserSchema = Schema({
     },
     celPhone: {
         type: Number
+    },
+    pin: {
+        type: String,
+        required: true
     }
 })
 

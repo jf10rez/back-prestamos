@@ -49,11 +49,9 @@ const createUser = async ( req, res = response ) => {
 
     try {
 
-        const { email, password } = req.body
+        const { email, password, pin } = req.body
 
         const validateEmail = await User.findOne({ email })
-
-        console.log(validateEmail)
 
         if( validateEmail ){
             return res.status(400).json({
@@ -63,9 +61,10 @@ const createUser = async ( req, res = response ) => {
         }
 
         const user = new User( req.body )
-        //Encriptar contraseña
+        //Encriptar contraseña y  pin
         const salt = bcrypt.genSaltSync();
         user.password = bcrypt.hashSync( password, salt )
+        user.pin = bcrypt.hashSync( pin, salt )
 
         const userSave = await user.save()
         
