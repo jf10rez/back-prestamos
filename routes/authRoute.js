@@ -8,10 +8,12 @@ const router = Router()
 
 router.use(passport.initialize())
 
-const { loginUser, loginWithFacebook } = require('../controllers/authController')
+const { loginUser, loginWithFacebook, createUser } = require('../controllers/authController')
 require('../middlewares/facebook')
 
 router.post( '/', loginUser )
+router.post( '/new', createUser )
+
 router.get("/facebook", passport.authenticate("facebook"));
 
 router.get(
