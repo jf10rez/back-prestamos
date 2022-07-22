@@ -45,7 +45,7 @@ const addQuota = async (req, res = response) => {
 
     const prestamo = await Prestamo.findById(id);
 
-    if( !validatePrestamos( prestamo, res, req ) ) return
+    if (!validatePrestamos(prestamo, res, req)) return;
 
     if (prestamo.state === 2) {
       return res.status(400).json({
@@ -102,7 +102,7 @@ const payCapital = async (req, res = response) => {
 
     const prestamo = await Prestamo.findById(id);
 
-    if( !validatePrestamos( prestamo, res, req ) ) return
+    if (!validatePrestamos(prestamo, res, req)) return;
 
     if (prestamo.state === 2) {
       return res.status(400).json({
@@ -153,7 +153,7 @@ const updatePrestamo = async (req, res = response) => {
 
     const prestamo = await Prestamo.findById(id);
 
-    if( !validatePrestamos( prestamo, res, req ) ) return
+    if (!validatePrestamos(prestamo, res, req)) return;
 
     const newPrestamo = {
       document,
@@ -161,37 +161,46 @@ const updatePrestamo = async (req, res = response) => {
       startDate,
     };
 
-    const prestamoUpdated = await Prestamo.findByIdAndUpdate(id, newPrestamo, { new: true });
+    const prestamoUpdated = await Prestamo.findByIdAndUpdate(id, newPrestamo, {
+      new: true,
+    });
 
     res.status(200).json({
       ok: true,
-      prestamo: prestamoUpdated
-    })
-
+      prestamo: prestamoUpdated,
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
-const changeStatePrestamo = async( req, res = response ) => {
-
+const changeStatePrestamo = async (req, res = response) => {
   try {
-
-    const { id } = req.params
+    const { id } = req.params;
 
     const prestamo = await Prestamo.findById(id);
 
-    if( !validatePrestamos( prestamo, res, req ) ) return
+    if (!validatePrestamos(prestamo, res, req)) return;
+
+    const statePrestamoUpdated = await Prestamo.findByIdAndUpdate(
+      id,
+      { state: 2 },
+      { new: true }
+    );
+
+    res.status(200).json({
+      ok: true,
+      prestamo: statePrestamoUpdated
+    })
     
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({
       ok: false,
-      message: 'Se presentó un error con el servidor'
-    })
+      message: "Se presentó un error con el servidor",
+    });
   }
-
-}
+};
 
 module.exports = {
   getPrestamos,
@@ -199,5 +208,5 @@ module.exports = {
   addQuota,
   payCapital,
   updatePrestamo,
-  changeStatePrestamo
+  changeStatePrestamo,
 };
