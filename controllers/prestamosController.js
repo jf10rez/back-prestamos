@@ -82,10 +82,13 @@ const addQuota = async (req, res = response) => {
       });
     }
 
+    const remainingAmountByQuotas = +prestamo.remainingAmount / +prestamo.quota;
+
     const prestamoUpdated = await Prestamo.findByIdAndUpdate(
       id,
       {
         currentQuota: addOneQuota,
+        remainingAmount: prestamo.remainingAmount - remainingAmountByQuotas
       },
       { new: true }
     );
