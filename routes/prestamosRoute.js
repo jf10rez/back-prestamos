@@ -12,6 +12,7 @@ const {
   addQuota,
   payCapital,
   updatePrestamo,
+  changeStatePrestamo,
 } = require("../controllers/prestamosController");
 const { isDate } = require("../helpers/isDate");
 const { validateFields } = require("../middlewares/validate-fields");
@@ -59,5 +60,7 @@ router.put(
   ],
   updatePrestamo
 );
+
+router.put("/state/:id", validateObjectId, changeStatePrestamo)
 
 module.exports = router;
