@@ -18,12 +18,20 @@ const PrestamoSchema = Schema({
         type: Number,
         required: true
     },
-    state: {
+    state: { //1: pagando, 2: pago
         type: Number,
         required: true
     },
     startDate: {
         type: String,
+        required: true
+    },
+    percentage: {
+        type: Number,
+        required: true
+    },
+    currentQuota: {
+        type: Number,
         required: true
     }
 })
