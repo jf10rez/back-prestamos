@@ -88,7 +88,7 @@ const addQuota = async (req, res = response) => {
       id,
       {
         currentQuota: addOneQuota,
-        remainingAmount: prestamo.remainingAmount - remainingAmountByQuotas
+        remainingAmount: prestamo.remainingAmount - remainingAmountByQuotas,
       },
       { new: true }
     );
@@ -108,6 +108,58 @@ const addQuota = async (req, res = response) => {
 
 const payCapital = async (req, res = response) => {
   try {
+    const { id } = req.params;
+    const { pay } = req.body;
+
+    const prestamo = await Prestamo.findById(id);
+
+    if (!prestamo) {
+      return res.status(400).json({
+        ok: false,
+        message: "El prestamo no existe",
+      });
+    }
+
+    if (prestamo.state === 2) {
+        return res.status(400).json({
+          ok: false,
+          message: "El estado de la deuda es pago",
+        });
+      }
+
+    if (prestamo.user.toString() !== req.uid) {
+      return res.status(401).json({
+        ok: false,
+        message: "El usuario no puede modificar este prestamo",
+      });
+    }
+
+    if ( pay > prestamo.remainingAmount ) {
+      return res.status(400).json({
+        ok: false,
+        message: "El abono a realizar es mayor al pago pendiente",
+      });
+    }
+
+    if ( +pay === +prestamo.remainingAmount) {
+      //Pagado
+      await Prestamo.findByIdAndUpdate(id, {
+        state: 2,
+      });
+    }
+
+    const prestamoUpdated = await Prestamo.findByIdAndUpdate(
+      id,
+      {
+        remainingAmount: prestamo.remainingAmount - +pay,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      ok: true,
+      prestamo: prestamoUpdated,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
