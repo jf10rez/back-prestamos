@@ -18,6 +18,7 @@ const { isDate } = require("../helpers/isDate");
 const { validateFields } = require("../middlewares/validate-fields");
 const { validateJWT } = require("../middlewares/validate-jwt");
 const { validateObjectId } = require("../middlewares/validate-objectId");
+const { validatePin } = require("../middlewares/validate-pin");
 
 router.use(validateJWT);
 
@@ -38,13 +39,14 @@ router.post(
   newPrestamo
 );
 
-router.post("/quota/:id", validateObjectId, addQuota);
+router.post("/quota/:id", [validateObjectId, validatePin], addQuota);
 router.post(
   "/pay/:id",
   [
     check("pay", "El abono a capital es obligatorio").isNumeric(),
     validateFields,
     validateObjectId,
+    validatePin,
   ],
   payCapital
 );
@@ -57,10 +59,11 @@ router.put(
     check("startDate", "La fecha inicial es obligatoria").custom(isDate),
     validateFields,
     validateObjectId,
+    validatePin,
   ],
   updatePrestamo
 );
 
-router.put("/state/:id", validateObjectId, changeStatePrestamo)
+router.put("/state/:id", [validateObjectId, validatePin], changeStatePrestamo);
 
 module.exports = router;
