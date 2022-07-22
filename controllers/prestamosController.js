@@ -19,7 +19,9 @@ const newPrestamo = async (req, res = response) => {
     const prestamo = new Prestamo(req.body);
     prestamo.user = req.uid;
     prestamo.currentQuota = 1;
-    prestamo.remainingAmount = req.body.amount;
+    prestamo.remainingAmount =
+      ((+req.body.amount * +req.body.percentage) / 100) * req.body.quota +
+      +req.body.amount;
     prestamo.state = 1;
     const savePrestamo = await prestamo.save();
 
@@ -49,11 +51,11 @@ const addQuota = async (req, res = response) => {
       });
     }
 
-    if( prestamo.state === 2 ){
-        return res.status(400).json({
-            ok: false,
-            message: "El estado de la deuda es pago",
-          });
+    if (prestamo.state === 2) {
+      return res.status(400).json({
+        ok: false,
+        message: "El estado de la deuda es pago",
+      });
     }
 
     if (prestamo.user.toString() !== req.uid) {
@@ -66,28 +68,32 @@ const addQuota = async (req, res = response) => {
     const addOneQuota = +prestamo.currentQuota + 1;
 
     //Validar que la cuota no sobrepase el máximo de cuotas
-    if( addOneQuota > prestamo.quota ){
-        return res.status(400).json({
-            ok: false,
-            message: 'La cuota agregada sobrepasa el máximo de cuotas'
-        })
+    if (addOneQuota > prestamo.quota) {
+      return res.status(400).json({
+        ok: false,
+        message: "La cuota agregada sobrepasa el máximo de cuotas",
+      });
     }
 
-    if( addOneQuota === prestamo.quota ){ //Pagado
-        await Prestamo.findByIdAndUpdate(id, {
-            state: 2,
-          });
+    if (addOneQuota === prestamo.quota) {
+      //Pagado
+      await Prestamo.findByIdAndUpdate(id, {
+        state: 2,
+      });
     }
 
-    const prestamoUpdated = await Prestamo.findByIdAndUpdate(id, {
-      currentQuota: addOneQuota,
-    }, { new: true });
+    const prestamoUpdated = await Prestamo.findByIdAndUpdate(
+      id,
+      {
+        currentQuota: addOneQuota,
+      },
+      { new: true }
+    );
 
     res.status(200).json({
-        ok: true,
-        prestamo: prestamoUpdated
-    })
-
+      ok: true,
+      prestamo: prestamoUpdated,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -97,25 +103,20 @@ const addQuota = async (req, res = response) => {
   }
 };
 
-const payCapital = async( req, res = response ) => {
-
-    try {
-
-
-        
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            ok: false,
-            message: "Se presentó un error con el servidor"
-        })
-    }
-
-}
+const payCapital = async (req, res = response) => {
+  try {
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      message: "Se presentó un error con el servidor",
+    });
+  }
+};
 
 module.exports = {
   getPrestamos,
   newPrestamo,
   addQuota,
-  payCapital
+  payCapital,
 };
