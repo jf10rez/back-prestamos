@@ -11,6 +11,7 @@ const {
   newPrestamo,
   addQuota,
   payCapital,
+  updatePrestamo,
 } = require("../controllers/prestamosController");
 const { isDate } = require("../helpers/isDate");
 const { validateFields } = require("../middlewares/validate-fields");
@@ -45,6 +46,18 @@ router.post(
     validateObjectId,
   ],
   payCapital
+);
+
+router.put(
+  "/:id",
+  [
+    check("name", "El nombre es obligatorio").not().isEmpty(),
+    check("document", "El documento es obligatorio").not().isEmpty(),
+    check("startDate", "La fecha inicial es obligatoria").custom(isDate),
+    validateFields,
+    validateObjectId,
+  ],
+  updatePrestamo
 );
 
 module.exports = router;

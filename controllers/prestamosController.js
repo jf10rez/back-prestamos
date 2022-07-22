@@ -121,11 +121,11 @@ const payCapital = async (req, res = response) => {
     }
 
     if (prestamo.state === 2) {
-        return res.status(400).json({
-          ok: false,
-          message: "El estado de la deuda es pago",
-        });
-      }
+      return res.status(400).json({
+        ok: false,
+        message: "El estado de la deuda es pago",
+      });
+    }
 
     if (prestamo.user.toString() !== req.uid) {
       return res.status(401).json({
@@ -134,14 +134,14 @@ const payCapital = async (req, res = response) => {
       });
     }
 
-    if ( pay > prestamo.remainingAmount ) {
+    if (pay > prestamo.remainingAmount) {
       return res.status(400).json({
         ok: false,
         message: "El abono a realizar es mayor al pago pendiente",
       });
     }
 
-    if ( +pay === +prestamo.remainingAmount) {
+    if (+pay === +prestamo.remainingAmount) {
       //Pagado
       await Prestamo.findByIdAndUpdate(id, {
         state: 2,
@@ -169,9 +169,49 @@ const payCapital = async (req, res = response) => {
   }
 };
 
+const updatePrestamo = async (req, res = response) => {
+  try {
+    const { document, name, startDate } = req.body;
+    const { id } = req.params;
+
+    const prestamo = await Prestamo.findById(id);
+
+    if (!prestamo) {
+      return res.status(400).json({
+        ok: false,
+        message: "El prestamo no existe",
+      });
+    }
+
+    if (prestamo.user.toString() !== req.uid) {
+      return res.status(401).json({
+        ok: false,
+        message: "El usuario no puede modificar este prestamo",
+      });
+    }
+
+    const newPrestamo = {
+      document,
+      name,
+      startDate,
+    };
+
+    const prestamoUpdated = await Prestamo.findByIdAndUpdate(id, newPrestamo, { new: true });
+
+    res.status(200).json({
+      ok: true,
+      prestamo: prestamoUpdated
+    })
+    
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getPrestamos,
   newPrestamo,
   addQuota,
   payCapital,
+  updatePrestamo,
 };
