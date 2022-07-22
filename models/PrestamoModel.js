@@ -33,7 +33,12 @@ const PrestamoSchema = Schema({
     currentQuota: {
         type: Number,
         required: true
-    }
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
 })
 
 PrestamoSchema.method('toJSON', function(){//Para devolver la info en el controlador con el objeto modificado
