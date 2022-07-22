@@ -6,10 +6,11 @@ const { Router } = require('express')
 const { check } = require('express-validator')
 const router = Router()
 
-const { getPrestamos, newPrestamo } = require('../controllers/prestamosController')
+const { getPrestamos, newPrestamo, addQuota } = require('../controllers/prestamosController')
 const { isDate } = require('../helpers/isDate')
 const { validateFields } = require('../middlewares/validate-fields')
 const { validateJWT } = require('../middlewares/validate-jwt')
+const { validateObjectId } = require('../middlewares/validate-objectId')
 
 router.use( validateJWT )
 
@@ -23,7 +24,8 @@ router.post( '/', [
     check("state", "El estado es obligatorio").not().isEmpty(),
     check("startDate", "La fecha de inicio es obligatoria").custom( isDate ),
     validateFields
-
 ], newPrestamo )
+
+router.post('/quota/:id', validateObjectId , addQuota)
 
 module.exports = router
