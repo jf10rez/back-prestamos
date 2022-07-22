@@ -95,8 +95,25 @@ const addQuota = async (req, res = response) => {
   }
 };
 
+const payCapital = async( req, res = response ) => {
+
+    try {
+
+        
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            ok: false,
+            message: "Se presentó un error con el servidor"
+        })
+    }
+
+}
+
 module.exports = {
   getPrestamos,
   newPrestamo,
   addQuota,
+  payCapital
 };
