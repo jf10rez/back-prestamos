@@ -1,4 +1,5 @@
 const { response } = require("express");
+const { validatePrestamos } = require("../helpers/validatePrestamos");
 const Prestamo = require("../models/PrestamoModel");
 
 const getPrestamos = async (req, res = response) => {
@@ -44,24 +45,12 @@ const addQuota = async (req, res = response) => {
 
     const prestamo = await Prestamo.findById(id);
 
-    if (!prestamo) {
-      return res.status(400).json({
-        ok: false,
-        message: "El prestamo no existe",
-      });
-    }
+    if( !validatePrestamos( prestamo, res, req ) ) return
 
     if (prestamo.state === 2) {
       return res.status(400).json({
         ok: false,
         message: "El estado de la deuda es pago",
-      });
-    }
-
-    if (prestamo.user.toString() !== req.uid) {
-      return res.status(401).json({
-        ok: false,
-        message: "El usuario no puede modificar este prestamo",
       });
     }
 
@@ -113,24 +102,12 @@ const payCapital = async (req, res = response) => {
 
     const prestamo = await Prestamo.findById(id);
 
-    if (!prestamo) {
-      return res.status(400).json({
-        ok: false,
-        message: "El prestamo no existe",
-      });
-    }
+    if( !validatePrestamos( prestamo, res, req ) ) return
 
     if (prestamo.state === 2) {
       return res.status(400).json({
         ok: false,
         message: "El estado de la deuda es pago",
-      });
-    }
-
-    if (prestamo.user.toString() !== req.uid) {
-      return res.status(401).json({
-        ok: false,
-        message: "El usuario no puede modificar este prestamo",
       });
     }
 
@@ -176,19 +153,7 @@ const updatePrestamo = async (req, res = response) => {
 
     const prestamo = await Prestamo.findById(id);
 
-    if (!prestamo) {
-      return res.status(400).json({
-        ok: false,
-        message: "El prestamo no existe",
-      });
-    }
-
-    if (prestamo.user.toString() !== req.uid) {
-      return res.status(401).json({
-        ok: false,
-        message: "El usuario no puede modificar este prestamo",
-      });
-    }
+    if( !validatePrestamos( prestamo, res, req ) ) return
 
     const newPrestamo = {
       document,
@@ -202,11 +167,31 @@ const updatePrestamo = async (req, res = response) => {
       ok: true,
       prestamo: prestamoUpdated
     })
-    
+
   } catch (error) {
     console.log(error);
   }
 };
+
+const changeStatePrestamo = async( req, res = response ) => {
+
+  try {
+
+    const { id } = req.params
+
+    const prestamo = await Prestamo.findById(id);
+
+    if( !validatePrestamos( prestamo, res, req ) ) return
+    
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      ok: false,
+      message: 'Se presentó un error con el servidor'
+    })
+  }
+
+}
 
 module.exports = {
   getPrestamos,
@@ -214,4 +199,5 @@ module.exports = {
   addQuota,
   payCapital,
   updatePrestamo,
+  changeStatePrestamo
 };
