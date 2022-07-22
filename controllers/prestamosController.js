@@ -1,19 +1,20 @@
 const { response } = require('express')
 const Prestamo = require('../models/PrestamoModel')
 
-const getPrestamos = ( req, res = response ) => {
+const getPrestamos = async( req, res = response ) => {
 
     try {
         
-        
+        const prestamos = await Prestamo.find( { user: req.uid } )
+
+        res.status(200).json({
+            ok: true,
+            prestamos
+        })
 
     } catch (error) {
         console.log(error)
     }
-
-    res.status(200).json({
-        ok: true,
-    })
 
 }
 
@@ -22,6 +23,8 @@ const newPrestamo = async( req, res = response ) => {
     try {
         
         const prestamo = new Prestamo( req.body )
+        prestamo.user = req.uid
+        prestamo.currentQuota = 1
         const savePrestamo = await prestamo.save()
 
         res.status(201).json({
