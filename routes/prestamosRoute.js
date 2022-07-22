@@ -21,7 +21,6 @@ router.post( '/', [
     check("name", "El nombre es obligatorio").not().isEmpty(),
     check("quota", "La cantidad de cuotas son obligatorias").not().isEmpty(),
     check("percentage", "El porcentaje a prestar es obligatorio").not().isEmpty(),
-    check("state", "El estado es obligatorio").not().isEmpty(),
     check("startDate", "La fecha de inicio es obligatoria").custom( isDate ),
     validateFields
 ], newPrestamo )

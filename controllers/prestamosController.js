@@ -19,6 +19,8 @@ const newPrestamo = async (req, res = response) => {
     const prestamo = new Prestamo(req.body);
     prestamo.user = req.uid;
     prestamo.currentQuota = 1;
+    prestamo.remainingAmount = req.body.amount;
+    prestamo.state = 1;
     const savePrestamo = await prestamo.save();
 
     res.status(201).json({
@@ -99,7 +101,7 @@ const payCapital = async( req, res = response ) => {
 
     try {
 
-        
+
         
     } catch (error) {
         console.log(error)
