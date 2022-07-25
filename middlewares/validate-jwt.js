@@ -20,10 +20,10 @@ const validateJWT = ( req, res = response, next )=> {
             process.env.SECRET_KEY_JWT
         )
 
-        const { uid, name } = payload
+        const { uid, email } = payload
 
         req.uid = uid
-        req.name = name
+        req.email = email
 
         next()
 
