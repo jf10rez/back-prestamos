@@ -99,8 +99,26 @@ const loginWithFacebook = ( req, res = response ) => {
 
 }
 
+const revalidateToken = async( req, res ) => {
+
+    const uid = req.uid
+    const email = req.email
+
+    //Generar JWT
+    const token = await generateJWT( uid, email )
+
+    res.status(200).json({
+        ok: true,
+        token,
+        uid,
+        email
+    })
+    
+}
+
 module.exports = {
     loginUser,
     loginWithFacebook,
-    createUser
+    createUser,
+    revalidateToken
 }

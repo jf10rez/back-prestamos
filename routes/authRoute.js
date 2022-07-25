@@ -14,7 +14,9 @@ const {
   loginUser,
   loginWithFacebook,
   createUser,
+  revalidateToken,
 } = require("../controllers/authController");
+const { validateJWT } = require("../middlewares/validate-jwt");
 require("../middlewares/facebook");
 
 router.post(
@@ -48,5 +50,7 @@ router.get(
   }),
   loginWithFacebook
 );
+
+router.get('/renew', validateJWT , revalidateToken)
 
 module.exports = router;
