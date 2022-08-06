@@ -52,7 +52,7 @@ router.get(
   loginWithFacebook
 );
 
-router.get(
+router.post(
   "/pin",
   [check("pin", "El pin es obligatorio").not().isEmpty(), validateJWT, validateFields],
   getPin
