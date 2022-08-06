@@ -65,7 +65,7 @@ router.put(
   updatePrestamo
 );
 
-router.delete( "/:id", [ validateJWT, validateObjectId ], deletePrestamo )
+router.delete( "/:id", [ validateJWT, validateObjectId, validatePin ], deletePrestamo )
 
 router.put("/state/:id", [validateObjectId, validatePin], changeStatePrestamo);
 
