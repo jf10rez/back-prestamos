@@ -15,6 +15,7 @@ const {
   loginWithFacebook,
   createUser,
   revalidateToken,
+  getPin,
 } = require("../controllers/authController");
 const { validateJWT } = require("../middlewares/validate-jwt");
 require("../middlewares/facebook");
@@ -51,6 +52,12 @@ router.get(
   loginWithFacebook
 );
 
-router.get('/renew', validateJWT , revalidateToken)
+router.get(
+  "/pin",
+  [check("pin", "El pin es obligatorio").not().isEmpty(), validateJWT, validateFields],
+  getPin
+);
+
+router.get("/renew", validateJWT, revalidateToken);
 
 module.exports = router;
