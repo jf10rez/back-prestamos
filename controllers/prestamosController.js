@@ -202,6 +202,28 @@ const changeStatePrestamo = async (req, res = response) => {
   }
 };
 
+const deletePrestamo = async( req, res = response ) => {
+
+    try {
+
+      const { id } = req.params
+      await Prestamo.findByIdAndDelete( id )
+
+      res.status(200).json({
+        ok: true,
+        message: "El prestamo se eliminó"
+      })
+      
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({
+        ok: false,
+        message: "Se produjo un error en el servidor"
+      })
+    }
+
+}
+
 module.exports = {
   getPrestamos,
   newPrestamo,
@@ -209,4 +231,5 @@ module.exports = {
   payCapital,
   updatePrestamo,
   changeStatePrestamo,
+  deletePrestamo
 };

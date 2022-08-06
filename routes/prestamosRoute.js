@@ -13,6 +13,7 @@ const {
   payCapital,
   updatePrestamo,
   changeStatePrestamo,
+  deletePrestamo,
 } = require("../controllers/prestamosController");
 const { isDate } = require("../helpers/isDate");
 const { validateFields } = require("../middlewares/validate-fields");
@@ -63,6 +64,8 @@ router.put(
   ],
   updatePrestamo
 );
+
+router.delete( "/:id", [ validateJWT, validateObjectId ], deletePrestamo )
 
 router.put("/state/:id", [validateObjectId, validatePin], changeStatePrestamo);
 
