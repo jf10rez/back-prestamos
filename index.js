@@ -24,6 +24,10 @@ app.use('/api/auth', require('./routes/authRoute'))
 app.use('/api/prestamo', require('./routes/prestamosRoute'))
 app.use('/api/unit', require('./routes/unitRoute'))
 
+app.get('*', (req, res) => {
+    res.sendFile( __dirname + '/public/index.html' )
+})
+
 //Escuchar peticiones
 app.listen(process.env.PORT, () => {
     console.log(`Server run in port ${ process.env.PORT }`);
