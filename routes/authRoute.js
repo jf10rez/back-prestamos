@@ -4,11 +4,11 @@
 
 const { Router } = require("express");
 const { check } = require("express-validator");
-const passport = require("passport");
+// const passport = require("passport");
 const router = Router();
 const { validateFields } = require("../middlewares/validate-fields");
 
-router.use(passport.initialize());
+// router.use(passport.initialize());
 
 const {
   loginUser,
@@ -41,16 +41,16 @@ router.post(
   createUser
 );
 
-router.get("/facebook", passport.authenticate("facebook"));
+// router.get("/facebook", passport.authenticate("facebook"));
 
-router.get(
-  "/facebook/callback",
-  passport.authenticate("facebook", {
-    successRedirect: "/",
-    failureRedirect: "/fail",
-  }),
-  loginWithFacebook
-);
+// router.get(
+//   "/facebook/callback",
+//   passport.authenticate("facebook", {
+//     successRedirect: "/",
+//     failureRedirect: "/fail",
+//   }),
+//   loginWithFacebook
+// );
 
 router.post(
   "/pin",
