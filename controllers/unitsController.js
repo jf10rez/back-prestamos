@@ -28,7 +28,7 @@ const newUnits = async (req, res = response) => {
 
     res.status(201).json({
       ok: true,
-      prestamo: saveUnit,
+      units: saveUnit,
     });
   } catch (error) {
     console.log(error);
